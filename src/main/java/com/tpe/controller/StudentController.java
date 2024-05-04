@@ -2,6 +2,7 @@ package com.tpe.controller;
 
 
 import com.tpe.domain.Student;
+import com.tpe.dto.StudentDTO;
 import com.tpe.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,12 +45,48 @@ public class StudentController {//http://localhost:8080/students + GET + PUT + P
         //Student objesine map edilmesini sagliyor.
         studentService.createStudent(student);
         Map<String, String> map = new HashMap<>();
-        map.put("message","Student is created successfully");
-        map.put("status","true");
+        map.put("message", "Student is created successfully");
+        map.put("status", "true");
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }
 
+    //Not: getStudentById() with RequestParam *******************************************************
+    //For getting data with multiple queries like "GET ME STUDENT WITH THIS.ID AND IN THIS.CITY"
+    @GetMapping("/query") //http://localhost:8080/students/query?id=1 + GET
+    public ResponseEntity<Student> getStudent(@RequestParam("id") Long id) {
+        Student student = studentService.findStudent(id);
+        return ResponseEntity.ok(student); //200
+    }
 
+    //Not: getStudentById()  with PathVariable *******************************************************
+    @GetMapping("/{id}") //http://localhost:8080/students/1 + GET
+    public ResponseEntity<Student> getStudentByPath(@PathVariable("id") Long id) {
+        Student student = studentService.findStudent(id);
+        return ResponseEntity.ok(student);
+    }
+
+    // !!! TRICK = 1 data alacaksam PathVariable ama birden fazla data alacaksam
+    //  RequestParam daha kullanisli
+
+    //Not: deleteStudent() *******************************************************
+    //http://localhost:8080/students/1  + DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> deleteStudent(@PathVariable("id") Long id) {
+        studentService.deleteStudent(id);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Student is deleted successfully");
+        map.put("status", "true");
+        return new ResponseEntity<>(map, HttpStatus.OK); //return ResponseEntity.ok(map);
+    }
+
+    //Not: updateStudent() *******************************************************
+    @PutMapping("/{id}") //http://localhost:8080/students/1 + PUT + JSON
+    public ResponseEntity<String> updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+        studentService.updateStudent(id, studentDTO);
+        String message = "Student is updated successfully";
+        return new ResponseEntity<>(message, HttpStatus.OK);//200
+
+    }
 
 
         /*
