@@ -1,7 +1,6 @@
 package com.tpe.controller;
 
 
-import com.sun.net.httpserver.HttpServer;
 import com.tpe.domain.Student;
 import com.tpe.dto.StudentDTO;
 import com.tpe.service.StudentService;
@@ -14,9 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -40,6 +40,7 @@ public class StudentController {//http://localhost:8080/students + GET + PUT + P
     @GetMapping // http://localhost:8080/students  + GET
     // 1 --> Student[] olur mu ? Olmaz List<> ile calismamam gerekiyor
     // 2 --> Response icinde Status codunu rahat setlemek icin ResponseEntity ..
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Student>> getAll() {
         List<Student> students = studentService.getAll();
         return ResponseEntity.ok(students); // 200 status kodu ile Student nesnelerini client tarafina yonlendirdi.

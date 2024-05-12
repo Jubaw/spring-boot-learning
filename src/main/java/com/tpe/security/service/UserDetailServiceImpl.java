@@ -6,7 +6,6 @@ import com.tpe.exceptions.ResourceNotFoundException;
 import com.tpe.repository.UserRepository;
 import com.tpe.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,8 +22,8 @@ import java.util.Set;
 public class UserDetailServiceImpl implements UserDetailsService {
 //Purpose of this class is to change User into UserDetails
 
-    private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserRepository userRepository; //@RequiredArgsConstructor creates constructor for the final variables.
+
 
 
     @Override

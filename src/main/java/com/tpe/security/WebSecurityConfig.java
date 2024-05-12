@@ -18,30 +18,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    //This class' purpose is to meet
-    // AuthenticationManager,Provider and Password Encoder
-    //with each other.
+    // !!! Bu class da amacimiz AuthenticationManager - Provider ve
+    //  PasswordEncoder yapilarini olusturup birbirleriyle tanistirmak
     @Autowired
     private UserDetailsService userDetailsService;
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable().
                 authorizeHttpRequests().
-                antMatchers("/","index.html","/css/*","/js/*","/register/*").
-                permitAll().anyRequest().authenticated().and().httpBasic();
+                antMatchers("/","index.html","/css/*","/js/*","/register").permitAll().
+                anyRequest().
+                authenticated().
+                and().
+                httpBasic();
     }
 
-
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
 
     @Bean
-    public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    public DaoAuthenticationProvider authProvider(){
+        DaoAuthenticationProvider authProvider  = new DaoAuthenticationProvider();
         authProvider.setPasswordEncoder(passwordEncoder());
         authProvider.setUserDetailsService(userDetailsService);
         return authProvider;
@@ -51,10 +52,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider());
     }
-
-
-
-
-
 
 }
